@@ -12,6 +12,8 @@
   "dependencies": {
     "axios": "^0.22.0",
     "element-ui": "^2.15.6",
+    "highcharts": "^10.3.2",
+    "highcharts-vue": "^1.4.0",
     "qs": "^6.10.1",
     "vue": "^2.5.2",
     "vue-axios": "^3.3.7",

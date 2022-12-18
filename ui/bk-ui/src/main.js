@@ -4,6 +4,9 @@ import Vue from "vue";
 import App from "./App";
 import router from "./router";
 import Element from "element-ui"; //element - 1
+import HighchartsVue from 'highcharts-vue'
+Vue.use(HighchartsVue)
+
 import "element-ui/lib/theme-chalk/index.css"; // element -2
 // 引入axios
 import axios from "axios";

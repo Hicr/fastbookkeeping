@@ -3,6 +3,7 @@
     <el-container class="demoContainer">
       <el-header>
         <div class="bk-head">
+          <a style="float:left;" class="tooher" @click="tosc">统计</a>
           <a class="jumptitle">快速记账</a>
           <el-button type="primary" plain style="float:right;margin-top: 10px;" @click="loginDialogVisible = true" v-show="!this.userid">登录</el-button>
           <a v-show="this.userid" class="userinfo" @click="logout">{{this.userid}}</a>
@@ -136,6 +137,7 @@ export default {
   props: {},
   data() {
     return {
+      IP:'http://127.0.0.1:9988',
       submitloading:false,//提交加载控制
       moneyemptyStatus:true,// 是否显示为空
       loginDialogVisible:false,
@@ -158,10 +160,10 @@ export default {
         {label:'交通'},{label:'购物'},{label:'生活'},{label:'社交'},{label:'饮食'}
       ],
       moneyTags:[
-        {label:'交通 4元',value:'交通/交通/4',color:''},
-        {label:'早餐 8元',value:'日常/早餐/8',color:''},
+        {label:'早餐 8元',value:'饮食/早餐/8',color:''},
         {label:'交通 15元',value:'交通/交通/15',color:''},
         {label:'交通 9元',value:'交通/交通/9',color:''},
+        {label:'午餐 14元',value:'饮食/午餐/14',color:''},
       ],
       todyMoneyListDatas:[],// 今日账单列表信息
 
@@ -179,7 +181,7 @@ export default {
       // 查询统计值
       if(this.online()){
         this.$request
-          .post('http://127.0.0.1:8899/ylbk/statistics' + '?userid=' + this.userid)
+          .post(this.IP + '/ylbk/statistics' + '?userid=' + this.userid)
           .then((res) => {
             console.log(res)
             if(res.data.code === 200){
@@ -217,7 +219,7 @@ export default {
       if (this.online()){
         // 有数据 显示 无数据显示空面板
         this.$request
-          .post('http://127.0.0.1:8899/ylbk/querybkToday' + '?userid=' + this.userid)
+          .post(this.IP + '/ylbk/querybkToday' + '?userid=' + this.userid)
           .then((res) => {
             console.log(res)
             if(res.data.code === 200){
@@ -243,7 +245,7 @@ export default {
     login(){
       if(this.form.username && this.form.pwd){
         this.$request
-          .post('http://127.0.0.1:8899/ylbk/login' + '?username=' + this.form.username + '&pwd=' + this.form.pwd)
+          .post(this.IP + '/ylbk/login' + '?username=' + this.form.username + '&pwd=' + this.form.pwd)
           .then((res) => {
             console.log(res)
             if(res.data.code === 200){
@@ -283,7 +285,7 @@ export default {
         if(this.validateMoney()){
           if (this.type && this.money && this.desc && this.userid){
             this.$request
-              .post('http://127.0.0.1:8899/ylbk/bookkeeping' + '?userid=' + this.userid + '&type=' + this.type + '&desc=' + this.desc + '&money=' + this.money)
+              .post(this.IP + '/ylbk/bookkeeping' + '?userid=' + this.userid + '&type=' + this.type + '&desc=' + this.desc + '&money=' + this.money)
               .then((res) => {
                 console.log(res)
                 if(res.data.code === 200){
@@ -335,7 +337,7 @@ export default {
           var tagdesc = values[1]
           var tagmoney = values[2]
           this.$request
-            .post('http://127.0.0.1:8899/ylbk/bookkeeping' + '?userid=' + this.userid + '&type=' + tagtype + '&desc=' + tagdesc + '&money=' + tagmoney)
+            .post(this.IP +  '/ylbk/bookkeeping' + '?userid=' + this.userid + '&type=' + tagtype + '&desc=' + tagdesc + '&money=' + tagmoney)
             .then((res) => {
               console.log(res)
               if(res.data.code === 200){
@@ -382,7 +384,7 @@ export default {
     validateMoney(){
       if(this.money){
         var val_moneys = this.money.split('.')
-        if(val_moneys.length>1){
+        if(val_moneys.length>2){
           return false
         }else {
           return true
@@ -419,6 +421,9 @@ export default {
         this.desc='',
         this.todyMoneyListDatas = []
       this.moneyemptyStatus = true
+    },
+    tosc(){
+      this.$router.push('/sc')
     }
   },
 }
@@ -483,6 +488,12 @@ export default {
   /*margin-left: 200px;*/
   width: 100%;
 
+}
+.tooher{
+  font-family: '微软雅黑';
+  color: #333;
+  font-weight: bold;
+  font-size: large;
 }
 .demoOperation {
   margin-bottom: 10px;

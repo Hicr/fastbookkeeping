@@ -3,6 +3,7 @@ import Router from "vue-router";
 
 
 import bk from "@/views/bk";
+import statistics from "@/views/bk/statistics"
 Vue.use(Router);
 
 export default new Router({
@@ -17,6 +18,11 @@ export default new Router({
       path: "/bk",
       name: "bk",
       component: bk
+    },
+    {
+      path: "/sc",
+      name: "statistics",
+      component: statistics
     }
   ]
 });
