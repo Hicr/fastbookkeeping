@@ -65,12 +65,15 @@
               <el-input v-model="desc" placeholder="请输入消费描述" style=" margin-top: 10px;"></el-input>
               <el-input v-model="money" placeholder="请输入消费金额" style=" margin-top: 10px;" oninput="value=value.replace(/^\.+|[^\d.]/g,'')" @blur="salaryChange"></el-input>
               <!--   TODO 补填           -->
-              <el-row   style=" margin-top: 10px;">
-                <el-col :span="8">
+              <el-row   style="margin-top: 10px;" :gutter="20">
+                <el-col :span="6">
                   <el-button @click="restForm" :loading="submitloading">重 置</el-button>
                 </el-col>
-                <el-col :span="8">
+                <el-col :span="6">
                   <el-button type="primary" @click="submitForm" :loading="submitloading">提 交</el-button>
+                </el-col>
+                <el-col :span="6">
+                  <el-button type="primary" @click="opendaysubmit" :loading="submitloading">指定时间提交</el-button>
                 </el-col>
               </el-row>
             </el-card>
@@ -83,7 +86,7 @@
                 <span class="bk-font">今日消费明细</span>
               </div>
               <div v-show="!moneyemptyStatus">
-                <el-row>
+                <el-row :gutter="20">
                   <el-col :span="6"><a class="bk-font">发生日期</a></el-col>
                   <el-col :span="6"><a class="bk-font">消费类别</a></el-col>
                   <el-col :span="6"><a class="bk-font">消费内容</a></el-col>
@@ -91,7 +94,7 @@
                 </el-row>
                 <br>
                 <div v-for="item in todyMoneyListDatas">
-                  <el-row>
+                  <el-row :gutter="20">
                     <el-col :span="6">{{item.today}}</el-col>
                     <el-col :span="6">{{item.type}}</el-col>
                     <el-col :span="6">{{item.desc}}</el-col>
@@ -99,6 +102,40 @@
                   </el-row>
                   <br>
                 </div>
+<!--                <el-table-->
+<!--                  :data="todyMoneyListDatas"-->
+<!--                  @row-dblclick="dblclick"-->
+<!--                  style="width: 100%">-->
+<!--                  <el-table-column-->
+<!--                    prop="today"-->
+<!--                    label="时间"-->
+<!--                    width="60">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="type"-->
+<!--                    label="类别"-->
+<!--                    width="80">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="desc"-->
+<!--                    width="100"-->
+<!--                    label="内容">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="money"-->
+<!--                    label="金额">-->
+<!--                  </el-table-column>-->
+<!--                  <el-table-column-->
+<!--                    prop="operate"-->
+<!--                    width="50"-->
+<!--                    label="操作">-->
+<!--                    <template slot-scope="{row}">-->
+<!--                      <el-button>-->
+<!--                        删除-->
+<!--                      </el-button>-->
+<!--                    </template>-->
+<!--                  </el-table-column>-->
+                </el-table>
               </div>
               <el-empty description="今日无消费" v-show="moneyemptyStatus"></el-empty>
             </el-card>
@@ -126,6 +163,26 @@
         <el-button type="primary" @click="login">登 录</el-button>
       </span>
     </el-dialog>
+    <el-dialog
+      title="请选择补填时间"
+      :visible.sync="daydialog"
+      width="90%"
+      :before-close="canceldaysubmit">
+      <el-date-picker
+        v-model="dayTime"
+        size="small"
+        align="center"
+        type="date"
+        placeholder="选择日期"
+        :picker-options="pickerOptions"
+        value-format="yyyy-MM-dd">
+      </el-date-picker>
+      <br>
+      <span slot="footer" class="dialog-footer">
+    <el-button @click="canceldaysubmit">取 消</el-button>
+    <el-button type="primary" @click="daysumbit">确 定</el-button>
+  </span>
+    </el-dialog>
   </div>
 </template>
 
@@ -138,6 +195,8 @@ export default {
   data() {
     return {
       IP:'http://127.0.0.1:9988',
+      daydialog:false,// 补填窗口控制
+      dayTime:'',
       submitloading:false,//提交加载控制
       moneyemptyStatus:true,// 是否显示为空
       loginDialogVisible:false,
@@ -166,6 +225,11 @@ export default {
         {label:'午餐 14元',value:'饮食/午餐/14',color:''},
       ],
       todyMoneyListDatas:[],// 今日账单列表信息
+      pickerOptions: {
+        disabledDate(time) {
+          return time.getTime() > Date.now();
+        },
+      },
 
     }
   },
@@ -200,8 +264,6 @@ export default {
       }
     },
     showicon(stats){
-      console.log(stats)
-      console.log(this.contraStats)
       if(this.contraStats == 0 && stats === 'bottom'){
         return true
       }else if(this.contraStats == 1 && stats === 'top'){
@@ -256,15 +318,29 @@ export default {
               this.loginDialogVisible = false
               this.$message({
                 message: '登录成功',
+                duration: 1500,
+                showClose: true,
                 type: 'success'
               });
             }else{
-              this.$message.error('登陆失败');
+              // this.$message.error('登陆失败');
+              this.$message({
+                message: '登陆失败',
+                duration: 1500,
+                showClose: true,
+                type: 'error'
+              });
             }
           })
           .catch((err) => console.log(err))
       }else{
-        this.$message.error('请完输入完整账号信息');
+        // this.$message.error('请完输入完整账号信息');
+        this.$message({
+          message: '请完输入完整账号信息',
+          duration: 1500,
+          showClose: true,
+          type: 'error'
+        });
       }
       this.restLoginForm()
     },
@@ -290,24 +366,44 @@ export default {
                 console.log(res)
                 if(res.data.code === 200){
                   this.$message({
+                    duration: 1500,
+                    showClose: true,
                     message: '记账成功',
                     type: 'success'
                   });
                   this.restForm()
                 }else{
-                  this.$message.error('发送异常');
+                  // this.$message.error('发送异常');
+                  this.$message({
+                    message: '发送异常',
+                    duration: 1500,
+                    showClose: true,
+                    type: 'error'
+                  });
                 }
                 this.submitloading = false
               })
               .catch((err) => console.log(err),this.submitloading = false)
           }else{
             this.submitloading = false
-            this.$message.error('缺少提交信息');
+            // this.$message.error('缺少提交信息');
+            this.$message({
+              message: '缺少提交信息',
+              duration: 1500,
+              showClose: true,
+              type: 'error'
+            });
           }
           this.loading()
         }else {
           this.submitloading = false
-          this.$message.error('消费金额格式有误');
+          // this.$message.error('消费金额格式有误');
+          this.$message({
+            message: '消费金额格式有误',
+            duration: 1500,
+            showClose: true,
+            type: 'error'
+          });
         }
       }else {
         this.submitloading = false
@@ -342,13 +438,21 @@ export default {
               console.log(res)
               if(res.data.code === 200){
                 this.$message({
+                  duration: 1500,
+                  showClose: true,
                   message: '记账成功',
                   type: 'success'
                 });
                 this.restForm()
                 this.loading()
               }else{
-                this.$message.error('记账异常');
+                // this.$message.error('记账异常');
+                this.$message({
+                  message: '记账异常',
+                  duration: 1500,
+                  showClose: true,
+                  type: 'error'
+                });
               }
               this.submitloading = false
 
@@ -356,6 +460,8 @@ export default {
             .catch((err) => console.log(err),this.submitloading = false)
         }).catch(() => {
           this.$message({
+            duration: 1500,
+            showClose: true,
             type: 'info',
             message: '已取消记账'
           });
@@ -372,7 +478,13 @@ export default {
       }
     },
     outline(){
-      this.$message('请先登录');
+      // this.$message('请先登录');
+      this.$message({
+        message: '请先登录',
+        duration: 1500,
+        showClose: true,
+        type: 'info'
+      });
     },
     loading(){
       this.staticloading()
@@ -400,11 +512,15 @@ export default {
         localStorage.removeItem('userid')
         this.clear()
         this.$message({
+          duration: 1500,
+          showClose: true,
           type: 'success',
           message: '已退出登录!'
         });
       }).catch(() => {
         this.$message({
+          duration: 1500,
+          showClose: true,
           type: 'info',
           message: '已取消'
         });
@@ -424,6 +540,80 @@ export default {
     },
     tosc(){
       this.$router.push('/sc')
+    },
+    // 打开弹窗
+    opendaysubmit(){
+      if(this.online()){
+        this.daydialog = true
+      }else{
+        this.outline()
+      }
+    },
+    // 关闭弹窗
+    canceldaysubmit(){
+      this.dayTime = ''
+      this.daydialog = false
+    },
+    // 提交方法
+    daysumbit(){
+      console.log(this.dayTime)
+      this.submitloading = true
+      if(this.online() ){
+        if(this.validateMoney()){
+          if (this.type && this.money && this.desc && this.userid){
+            this.$request
+              .post(this.IP + '/ylbk/bookkeeping' + '?userid=' + this.userid + '&type=' + this.type + '&desc=' + this.desc + '&money=' + this.money + '&day=' + this.dayTime)
+              .then((res) => {
+                console.log(res)
+                if(res.data.code === 200){
+                  this.$message({
+                    duration: 1500,
+                    showClose: true,
+                    message: '记账成功',
+                    type: 'success'
+                  });
+                  this.restForm()
+                  this.canceldaysubmit()
+                }else{
+                  // this.$message.error('发送异常');
+                  this.$message({
+                    message: '发送异常',
+                    duration: 1500,
+                    showClose: true,
+                    type: 'error'
+                  });
+                }
+                this.submitloading = false
+              })
+              .catch((err) => console.log(err),this.submitloading = false)
+          }else{
+            this.submitloading = false
+            // this.$message.error('缺少提交信息');
+            this.$message({
+              message: '缺少提交信息',
+              duration: 1500,
+              showClose: true,
+              type: 'error'
+            });
+          }
+          this.loading()
+        }else {
+          this.submitloading = false
+          // this.$message.error('消费金额格式有误');
+          this.$message({
+            message: '消费金额格式有误',
+            duration: 1500,
+            showClose: true,
+            type: 'error'
+          });
+        }
+      }else {
+        this.submitloading = false
+        this.outline()
+      }
+    },
+    dblclick(row){
+      console.log(row)
     }
   },
 }

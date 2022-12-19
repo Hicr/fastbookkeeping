@@ -475,16 +475,30 @@ export default {
               this.loading()
               this.loginDialogVisible = false
               this.$message({
+                duration: 1500,
+                showClose: true,
                 message: '登录成功',
                 type: 'success'
               });
             }else{
-              this.$message.error('登陆失败');
+              // this.$message.error('登陆失败');
+              this.$message({
+                message: '登陆失败',
+                duration: 1500,
+                showClose: true,
+                type: 'error'
+              });
             }
           })
           .catch((err) => console.log(err))
       }else{
-        this.$message.error('请完输入完整账号信息');
+        // this.$message.error('请完输入完整账号信息');
+        this.$message({
+          message: '请完输入完整账号信息',
+          duration: 1500,
+          showClose: true,
+          type: 'error'
+        });
       }
       this.restLoginForm()
     },
@@ -497,11 +511,15 @@ export default {
         localStorage.removeItem('userid')
         this.clear()
         this.$message({
+          duration: 1500,
+          showClose: true,
           type: 'success',
           message: '已退出登录!'
         });
       }).catch(() => {
         this.$message({
+          duration: 1500,
+          showClose: true,
           type: 'info',
           message: '已取消'
         });
@@ -770,7 +788,12 @@ export default {
       }
     },
     outline(){
-      this.$message('请先登录');
+      this.$message({
+        message: '请先登录',
+        duration: 1500,
+        showClose: true,
+        type: 'info'
+      });
     },
     tobk(){
       this.$router.push('/')
