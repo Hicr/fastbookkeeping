@@ -1,8 +1,9 @@
 # 快速记账
 架构
 
-	- ui ： vue2 + element-ui
+	- ui ： vue2 + element-ui + Highcharts
 	- server：python
+	- db : mysql
 
 ## 说明
 
@@ -68,4 +69,4 @@ server {
 
 
 
-[python 学习](https://www.cnblogs.com/zhxwind/p/11202629.html)
+
