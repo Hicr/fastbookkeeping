@@ -63,6 +63,9 @@ server {
   location /ylbk {
     proxy_pass http://bkserver/ylbk ;
   }
+  location /ylmanager {
+    proxy_pass http://bkserver/ylmanager ;
+  }
 }
 ```
 
