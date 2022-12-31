@@ -4,6 +4,10 @@
       <el-header>
         <div class="bk-head">
           <a style="float:left;" class="tooher" @click="tosc">统计</a>
+          <a style="float:left;margin-left: 10px;" class="tooher" >|</a>
+          <a style="float:left;margin-left: 10px;" class="tooher" @click="tomanager">管理</a>
+          <a style="float:left;margin-left: 10px;" class="tooher" v-show="this.userid">|</a>
+          <a style="float:left;margin-left: 10px;" v-show="this.userid" class="tooher" @click="logout">退出</a>
           <a class="jumptitle">快速记账</a>
           <el-button type="primary" plain style="float:right;margin-top: 10px;" @click="loginDialogVisible = true" v-show="!this.userid">登录</el-button>
           <a v-show="this.userid" class="userinfo" @click="logout">{{this.userid}}</a>
@@ -54,7 +58,7 @@
               </el-tag>
             </el-card>
             <el-card style=" margin-top: 5px;">
-              <el-select v-model="type" placeholder="请选择消费类型" style="width:100%">
+              <el-select v-model="type" placeholder="请选择消费类型" style="width:100%" clearable>
                 <el-option
                   v-for="item in types"
                   :key="item.label"
@@ -64,7 +68,7 @@
               </el-select>
               <el-input v-model="desc" placeholder="请输入消费描述" style=" margin-top: 10px;"></el-input>
               <el-input v-model="money" placeholder="请输入消费金额" style=" margin-top: 10px;" oninput="value=value.replace(/^\.+|[^\d.]/g,'')" @blur="salaryChange"></el-input>
-              <!--   TODO 补填           -->
+              <!--   TODO 补填   -->
               <el-row   style="margin-top: 10px;" :gutter="20">
                 <el-col :span="6">
                   <el-button @click="restForm" :loading="submitloading">重 置</el-button>
@@ -102,40 +106,6 @@
                   </el-row>
                   <br>
                 </div>
-<!--                <el-table-->
-<!--                  :data="todyMoneyListDatas"-->
-<!--                  @row-dblclick="dblclick"-->
-<!--                  style="width: 100%">-->
-<!--                  <el-table-column-->
-<!--                    prop="today"-->
-<!--                    label="时间"-->
-<!--                    width="60">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="type"-->
-<!--                    label="类别"-->
-<!--                    width="80">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="desc"-->
-<!--                    width="100"-->
-<!--                    label="内容">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="money"-->
-<!--                    label="金额">-->
-<!--                  </el-table-column>-->
-<!--                  <el-table-column-->
-<!--                    prop="operate"-->
-<!--                    width="50"-->
-<!--                    label="操作">-->
-<!--                    <template slot-scope="{row}">-->
-<!--                      <el-button>-->
-<!--                        删除-->
-<!--                      </el-button>-->
-<!--                    </template>-->
-<!--                  </el-table-column>-->
-                </el-table>
               </div>
               <el-empty description="今日无消费" v-show="moneyemptyStatus"></el-empty>
             </el-card>
@@ -188,6 +158,7 @@
 
 <script>
 const qs = require('qs') //引入序列化功能
+import {FB_TYPE,FB_TAGS} from './fb'
 export default {
   name: 'bk',
   components: {},
@@ -215,15 +186,8 @@ export default {
         username:'',
         pwd:''
       },
-      types:[
-        {label:'交通'},{label:'购物'},{label:'生活'},{label:'社交'},{label:'饮食'}
-      ],
-      moneyTags:[
-        {label:'早餐 8元',value:'饮食/早餐/8',color:''},
-        {label:'交通 15元',value:'交通/交通/15',color:''},
-        {label:'交通 9元',value:'交通/交通/9',color:''},
-        {label:'午餐 14元',value:'饮食/午餐/14',color:''},
-      ],
+      types:[],// 消费分类
+      moneyTags:[],// 快速记账标签
       todyMoneyListDatas:[],// 今日账单列表信息
       pickerOptions: {
         disabledDate(time) {
@@ -235,7 +199,10 @@ export default {
   },
   computed: {},
   watch: {},
-  created() {},
+  created() {
+    this.types = FB_TYPE
+    this.moneyTags = FB_TAGS
+  },
   mounted() {
     this.userid = localStorage.getItem('userid')
     this.loading()
@@ -540,6 +507,9 @@ export default {
     },
     tosc(){
       this.$router.push('/sc')
+    },
+    tomanager(){
+      this.$router.push('/manager')
     },
     // 打开弹窗
     opendaysubmit(){

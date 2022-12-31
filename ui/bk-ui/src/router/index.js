@@ -4,6 +4,7 @@ import Router from "vue-router";
 
 import bk from "@/views/bk";
 import statistics from "@/views/bk/statistics"
+import fbmanager from "@/views/bk/fbmanager.vue";
 Vue.use(Router);
 
 export default new Router({
@@ -23,6 +24,11 @@ export default new Router({
       path: "/sc",
       name: "statistics",
       component: statistics
+    },
+    {
+      path: "/manager",
+      name: "fbmanager",
+      component: fbmanager
     }
   ]
 });

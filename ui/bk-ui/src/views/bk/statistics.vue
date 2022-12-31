@@ -3,9 +3,13 @@
     <el-container class="demoContainer">
       <el-header>
         <div class="bk-head">
-          <a style="float:left;" class="tooher" @click="tobk">记账</a>
+          <a style="float:left;" class="tooher" @click="tobk">记 账</a>
+          <a style="float:left;margin-left: 10px;" class="tooher" >|</a>
+          <a style="float:left;margin-left: 10px;" class="tooher" @click="tomanager">管 理</a>
+          <a style="float:left;margin-left: 10px;" class="tooher" v-show="this.userid">|</a>
+          <a style="float:left;margin-left: 10px;" v-show="this.userid" class="tooher" @click="logout">退 出</a>
           <a class="jumptitle">开销统计</a>
-          <el-button type="primary" plain style="float:right;margin-top: 10px;" @click="loginDialogVisible = true" v-show="!this.userid">登录</el-button>
+          <el-button type="primary" plain style="float:right;margin-top: 10px;" @click="loginDialogVisible = true" v-show="!this.userid">登 录</el-button>
           <a v-show="this.userid" class="userinfo" @click="logout">{{this.userid}}</a>
         </div>
       </el-header>
@@ -797,7 +801,10 @@ export default {
     },
     tobk(){
       this.$router.push('/')
-    }
+    },
+    tomanager(){
+      this.$router.push('/manager')
+    },
   }
 }
 </script>
