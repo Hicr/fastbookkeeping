@@ -10,6 +10,26 @@ const FB_TAGS = [
   {label:'交通卡 100元',value:'交通/地铁卡/100',color:''}
 ]
 
+const APP_LIST = [{
+  label:'上海交通卡',value:'http://mobile.sptcc.com/event/?from=timeline&isappinstalled=1',type:''
+},{
+  label:'支付宝',value:'alipays://',type:''
+},{
+  label:'微信',value:'weixin://',type:'success'
+},{
+  label:'饿了么',value:'eleme://',type:''
+},{
+  label:'美团',value:'imeituan://',type:'warning'
+},{
+  label:'滴滴打车',value:'diditaxi://',type:'warning'
+},{
+  label:'淘宝',value:'taobao://',type:'danger'
+},{
+  label:'京东',value:'openApp.jdMobile://',type:'danger'
+},{
+  label:'拼多多',value:'pinduoduo://',type:'danger'
+},]
+
 export {
-  FB_TYPE,FB_TAGS
+  FB_TYPE,FB_TAGS,APP_LIST
 }

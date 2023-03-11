@@ -45,18 +45,29 @@
           <div class="bk-main">
             <el-card style=" margin-top: 5px;">
               <div slot="header" class="clearfix">
-                <i class="el-icon-collection-tag" style="color: orange"></i>
-                <span class="bk-font">速记</span>
+                <i class="el-icon-star-on" style="color: orange"></i>
+                <span class="bk-font">快速访问</span>
               </div>
               <el-tag
-                v-for="tag in moneyTags"
-                :key="tag.value"
+                v-for="app in appliest"
+                :key="app.value"
                 style="margin: 3px;"
-                @click="tagssubmit(tag.value)"
-                :type="tag.color">
-                {{tag.label}}
+                effect="plain"
+                :type="app.type">
+                <a :href="app.value">{{app.label}}</a>
               </el-tag>
+<!--              <el-tag-->
+<!--                v-for="app in appliest"-->
+<!--                :key="app.value"-->
+<!--                style="margin: 3px;"-->
+<!--                @click="toApp(tag.value)"-->
+<!--                :type="app.type">-->
+<!--                <a :href="app.value">{{app.label}}</a>-->
+<!--              </el-tag>-->
+              <div>
+              </div>
             </el-card>
+
             <el-card style=" margin-top: 5px;">
               <el-select v-model="type" placeholder="请选择消费类型" style="width:100%" clearable>
                 <el-option
@@ -68,7 +79,6 @@
               </el-select>
               <el-input v-model="desc" placeholder="请输入消费描述" style=" margin-top: 10px;"></el-input>
               <el-input v-model="money" placeholder="请输入消费金额" style=" margin-top: 10px;" oninput="value=value.replace(/^\.+|[^\d.]/g,'')" @blur="salaryChange"></el-input>
-              <!--   TODO 补填   -->
               <el-row   style="margin-top: 10px;" :gutter="20">
                 <el-col :span="6">
                   <el-button @click="restForm" :loading="submitloading">重 置</el-button>
@@ -80,6 +90,20 @@
                   <el-button type="primary" @click="opendaysubmit" :loading="submitloading">指定时间提交</el-button>
                 </el-col>
               </el-row>
+            </el-card>
+            <el-card style=" margin-top: 5px;">
+              <div slot="header" class="clearfix">
+                <i class="el-icon-collection-tag" style="color: orange"></i>
+                <span class="bk-font">速记</span>
+              </div>
+              <el-tag
+                v-for="tag in moneyTags"
+                :key="tag.value"
+                style="margin: 3px;"
+                @click="tagssubmit(tag.value)"
+                :type="tag.color">
+                {{tag.label}}
+              </el-tag>
             </el-card>
           </div>
           <div class="bk-foot">
@@ -110,37 +134,7 @@
               <el-empty description="今日无消费" v-show="moneyemptyStatus"></el-empty>
             </el-card>
           </div>
-          <el-card style=" margin-top: 5px;">
-            <div slot="header" class="clearfix">
-              <i class="el-icon-star-on" style="color: orange"></i>
-              <span class="bk-font">快速访问</span>
-            </div>
-            <div>
-              <el-tag @click="toshjiaotongka"><a href="http://mobile.sptcc.com/event/?from=timeline&isappinstalled=1">上海交通卡</a></el-tag>
 
-              <el-tag @click="toshjiaotongka"><a href="alipays://">支付宝</a></el-tag>
-
-              <el-tag @click="toshjiaotongka"><a href="weixin://">微信</a></el-tag>
-
-              <el-tag @click="toshjiaotongka"><a href="eleme://">饿了吗</a></el-tag>
-
-              <el-tag @click="toshjiaotongka"><a href="meituanwaimai://">美团外卖</a></el-tag>
-
-              <el-tag @click="toshjiaotongka"><a href="diditaxi://">滴滴打车</a></el-tag>
-
-              <el-tag @click="toshjiaotongka"><a href="taobao://">淘宝</a></el-tag>
-
-              <el-tag @click="toshjiaotongka"><a href="openApp.jdMobile://">京东</a></el-tag>
-
-              <el-tag @click="toshjiaotongka"><a href="pinduoduo://">拼多多</a></el-tag>
-
-<!--              <el-tag @click="toshjiaotongka"><a href="">肯德基</a></el-tag>-->
-
-<!--              <el-tag @click="toshjiaotongka"><a href="">麦当劳</a></el-tag>-->
-
-<!--              <el-tag @click="toshjiaotongka"><a href="">盒马</a></el-tag>-->
-            </div>
-          </el-card>
         </div>
 
       </el-main>
@@ -190,7 +184,7 @@
 
 <script>
 const qs = require('qs') //引入序列化功能
-import {FB_TYPE,FB_TAGS} from './fb'
+import {FB_TYPE,FB_TAGS,APP_LIST} from './fb'
 export default {
   name: 'bk',
   components: {},
@@ -226,7 +220,7 @@ export default {
           return time.getTime() > Date.now();
         },
       },
-
+      appliest:[]
     }
   },
   computed: {},
@@ -234,6 +228,7 @@ export default {
   created() {
     this.types = FB_TYPE
     this.moneyTags = FB_TAGS
+    this.appliest = APP_LIST
   },
   mounted() {
     this.userid = localStorage.getItem('userid')
@@ -275,9 +270,9 @@ export default {
         return false
       }
     },
-    // toshjiaotongka(){
-    //   windwos.location.
-    // },
+    toApp(appschema){
+      // windwos.location.herh=appschema
+    },
     // 加载今日账单
     todyMoneyList(){
       if (this.online()){
