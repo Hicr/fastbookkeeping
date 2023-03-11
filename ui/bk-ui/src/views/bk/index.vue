@@ -110,7 +110,39 @@
               <el-empty description="今日无消费" v-show="moneyemptyStatus"></el-empty>
             </el-card>
           </div>
+          <el-card style=" margin-top: 5px;">
+            <div slot="header" class="clearfix">
+              <i class="el-icon-star-on" style="color: orange"></i>
+              <span class="bk-font">快速访问</span>
+            </div>
+            <div>
+              <el-tag @click="toshjiaotongka"><a href="http://mobile.sptcc.com/event/?from=timeline&isappinstalled=1">上海交通卡</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="alipays://">支付宝</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="weixin://">微信</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="eleme://">饿了吗</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="meituanwaimai://">美团外卖</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="diditaxi://">滴滴打车</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="taobao://">淘宝</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="openApp.jdMobile://">京东</a></el-tag>
+
+              <el-tag @click="toshjiaotongka"><a href="pinduoduo://">拼多多</a></el-tag>
+
+<!--              <el-tag @click="toshjiaotongka"><a href="">肯德基</a></el-tag>-->
+
+<!--              <el-tag @click="toshjiaotongka"><a href="">麦当劳</a></el-tag>-->
+
+<!--              <el-tag @click="toshjiaotongka"><a href="">盒马</a></el-tag>-->
+            </div>
+          </el-card>
         </div>
+
       </el-main>
     </el-container>
     <el-dialog
@@ -243,6 +275,9 @@ export default {
         return false
       }
     },
+    // toshjiaotongka(){
+    //   windwos.location.
+    // },
     // 加载今日账单
     todyMoneyList(){
       if (this.online()){
